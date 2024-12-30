@@ -1,8 +1,9 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const appRoutes = require('./routes/app-routes');
+require('dotenv').config(); // Load environment variables
+
+const userRoutes = require('./routes/user-routes'); // Import user routes
 
 const app = express();
 
@@ -10,14 +11,14 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Database connection
-const DB_URI = "mongodb://localhost:27017/jobPlatform"; // Update as necessary
-mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+// MongoDB connection
+const DB_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/mydb"; // Use environment variable or default
+mongoose.connect(DB_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-// Routes
-app.use('/api', appRoutes);
+// Register routes
+app.use('/api', userRoutes); // Prefix all user routes with /api
 
 // Server setup
 const PORT = process.env.PORT || 3000;
