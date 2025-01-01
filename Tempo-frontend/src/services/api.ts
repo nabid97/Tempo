@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api'; // Update with your backend URL
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';// Update with your backend URL
 
 // Register a new user
 export const registerUser = async (data: { username: string; password: string; role: string }) => {

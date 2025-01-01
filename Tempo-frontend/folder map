@@ -1,11 +1,20 @@
 job-platform-frontend/
 ├── public/
+│   └── index.html            # Root HTML file
 ├── src/
-│   ├── components/           # Reusable components (e.g., Input, Button)
-│   ├── pages/                # Pages (e.g., Register, Login, Jobs)
-│   ├── services/             # API calls (e.g., authService, jobService)
+│   ├── components/           # Reusable components (e.g., Header, Footer)
+│   ├── pages/                # Page components (e.g., Login, Register, Jobs)
+│   │   ├── Login.tsx         # Login page
+│   │   ├── Register.tsx      # Register page
+│   │   └── Jobs.tsx          # Job Listings page
+│   ├── services/             # API calls (e.g., registerUser, loginUser)
+│   │   └── api.ts            # Centralized API functions
 │   ├── types/                # Type definitions (e.g., User, Job)
-│   ├── App.tsx               # Main App component
-│   ├── index.tsx             # Entry point
-│   └── App.css               # Global styles
-└── package.json
+│   │   ├── User.ts           # User type definition
+│   │   └── Job.ts            # Job type definition
+│   ├── App.tsx               # Main app component
+│   ├── index.tsx             # React entry point
+│   └── App.css               # Global CSS styles
+├── .env                      # Environment variables
+├── package.json              # Project dependencies
+└── tsconfig.json             # TypeScript configuration
