@@ -1,9 +1,9 @@
-// routes/user-routes.js
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/user-controller'); // Import the user controller
+const userController = require('../controllers/user-controller');
 
-// Define the register route
+// Define user-related routes
 router.post('/register', userController.register);
+router.post('/login', userController.login);
 
 module.exports = router;

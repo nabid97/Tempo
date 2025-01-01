@@ -1,0 +1,11 @@
+job-platform-frontend/
+├── public/
+├── src/
+│   ├── components/           # Reusable components (e.g., Input, Button)
+│   ├── pages/                # Pages (e.g., Register, Login, Jobs)
+│   ├── services/             # API calls (e.g., authService, jobService)
+│   ├── types/                # Type definitions (e.g., User, Job)
+│   ├── App.tsx               # Main App component
+│   ├── index.tsx             # Entry point
+│   └── App.css               # Global styles
+└── package.json
