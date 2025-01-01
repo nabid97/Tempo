@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/react": "^19.0.2",
     "jest": "^29.7.0",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

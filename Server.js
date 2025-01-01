@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables
 
-const userRoutes = require('./routes/user-routes');
+const userRoutes = require('./routes/user-routes'); // Import user routes
 
+// Initialize app
 const app = express();
 
 // Middleware
@@ -17,8 +18,9 @@ mongoose.connect(DB_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
+
 // Routes
-app.use('/api', userRoutes);
+app.use('/api', userRoutes); // Prefix all user routes with /api
 
 // Default route for API documentation
 app.get('/', (req, res) => {
