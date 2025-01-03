@@ -1,33 +1,73 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api'; // Your hardcoded backend URL
-// Update with your backend URL
+// Use REACT_APP_BACKEND_URL from the environment variable
+const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000/api';
+
+console.log('API URL:', API_URL);
+
+const apiClient = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Generic error handler
+const handleError = (error: any) => {
+  console.error('API Error:', error.response || error.message || error);
+  throw error.response?.data || error.message || 'An unknown error occurred';
+};
 
 // Register a new user
 export const registerUser = async (data: { username: string; password: string; role: string }) => {
-  return axios.post(`${API_URL}/register`, data);
+  try {
+    const response = await apiClient.post('/register', data);
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 // Login user
 export const loginUser = async (data: { username: string; password: string }) => {
-  return axios.post(`${API_URL}/login`, data);
+  try {
+    const response = await apiClient.post('/login', data);
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 // Fetch jobs
 export const fetchJobs = async () => {
-  return axios.get(`${API_URL}/jobs`);
+  try {
+    const response = await apiClient.get('/jobs');
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 // Post a job
 export const postJob = async (token: string, data: { title: string; description: string }) => {
-  return axios.post(`${API_URL}/jobs`, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  try {
+    const response = await apiClient.post('/jobs', data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 // Apply for a job
 export const applyJob = async (token: string, jobId: string) => {
-  return axios.post(`${API_URL}/jobs/${jobId}/apply`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  try {
+    const response = await apiClient.post(`/jobs/${jobId}/apply`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
 };

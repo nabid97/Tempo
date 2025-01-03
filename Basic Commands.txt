@@ -1,0 +1,37 @@
+Basic Commands:
+
+pm2 start <app>: Start an app (e.g., server.js).
+pm2 start <app> --name <name>: Start an app with a custom name.
+pm2 list: Show all running apps.
+pm2 stop <id|name>: Stop an app by ID or name.
+pm2 restart <id|name>: Restart an app.
+pm2 delete <id|name>: Remove an app from PM2.
+Auto-Restart on Reboot:
+
+pm2 save: Save the current process list.
+pm2 startup: Setup PM2 to auto-start apps on system boot.
+Logs and Monitoring:
+
+pm2 logs: View logs for all apps.
+pm2 logs <id|name>: View logs for a specific app.
+pm2 monit: Interactive monitoring dashboard.
+pm2 flush: Clear all logs.
+Scaling and Cluster Mode:
+
+pm2 start <app> -i <instances>: Start an app in cluster mode.
+pm2 scale <name> <instances>: Scale app instances in cluster mode.
+Process Management:
+
+pm2 reload all: Reload all apps without downtime (cluster mode).
+pm2 restart all: Restart all apps.
+pm2 stop all: Stop all apps.
+pm2 delete all: Delete all apps.
+Debugging and Troubleshooting:
+
+pm2 kill: Stop all apps and terminate PM2.
+pm2 resurrect: Reload previously saved apps after reboot.
+pm2 report: Generate a PM2 runtime report.
+
+taskkill /IM node.exe /F - kill all node.exe
+tasklist | findstr node.exe - check all node.exe 
+

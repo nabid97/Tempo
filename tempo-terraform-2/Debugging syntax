@@ -1,0 +1,1 @@
+Example: Select-String -Path .\ecs-service-module\* -Pattern 'variable "execution_role_arn"' -List
