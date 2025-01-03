@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { fetchJobs } from '../services/api';
+import { Container, Typography, Card, CardContent, Grid } from '@mui/material';
 
 const Jobs: React.FC = () => {
-    const [jobs, setJobs] = useState<any[]>([]); // State to store job listings
-    const [error, setError] = useState<string | null>(null);
+    const [jobs, setJobs] = useState([]);
+    const [error, setError] = useState('');
 
-    // Fetch jobs on component mount
     useEffect(() => {
         const getJobs = async () => {
             try {
                 const response = await fetchJobs();
                 setJobs(response.data);
-            } catch (err) {
+            } catch {
                 setError('Failed to fetch jobs');
             }
         };
@@ -20,18 +20,24 @@ const Jobs: React.FC = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Job Listings</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <ul>
-                {jobs.map((job) => (
-                    <li key={job.id}>
-                        <h3>{job.title}</h3>
-                        <p>{job.description}</p>
-                    </li>
+        <Container maxWidth="lg">
+            <Typography variant="h4" component="h1" gutterBottom>
+                Job Listings
+            </Typography>
+            {error && <Typography color="error">{error}</Typography>}
+            <Grid container spacing={3}>
+                {jobs.map((job: any) => (
+                    <Grid item xs={12} sm={6} md={4} key={job.id}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6">{job.title}</Typography>
+                                <Typography>{job.description}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 ))}
-            </ul>
-        </div>
+            </Grid>
+        </Container>
     );
 };
 
