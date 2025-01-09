@@ -37,3 +37,8 @@ tests/
 
 # Ignore Docker-related overrides
 docker-compose.override.yml
+
+# Ignore Terraform files
+terraform/
+*.tfstate
+*.tfstate.backup

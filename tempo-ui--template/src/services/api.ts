@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 // Use REACT_APP_BACKEND_URL from the environment variable
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000/api';
-
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 console.log('API URL:', API_URL);
 
 const apiClient = axios.create({
@@ -11,6 +10,7 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
 
 // Generic error handler
 const handleError = (error: any) => {

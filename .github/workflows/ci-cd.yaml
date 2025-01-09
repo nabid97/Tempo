@@ -1,0 +1,135 @@
+name: Full CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Stage 1: Frontend Tests
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install Frontend Dependencies
+      - name: Install Frontend Dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      # Run Frontend Unit Tests
+      - name: Run Frontend Unit Tests with Coverage
+        run: npm test -- --coverage
+        working-directory: ./frontend
+
+      # Build Frontend
+      - name: Build Frontend
+        run: npm run build
+        working-directory: ./frontend
+
+  # Stage 2: Backend Tests
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+
+    steps:
+      # Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install Backend Dependencies
+      - name: Install Backend Dependencies
+        run: npm install
+        working-directory: ./backend
+
+      # Run Backend Unit Tests
+      - name: Run Backend Unit Tests with Coverage
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }} # MongoDB Atlas for tests
+        run: npm test -- --coverage
+        working-directory: ./backend
+
+  # Stage 3: Integration Tests
+  integration-tests:
+    name: Integration Tests
+    needs: [frontend-tests, backend-tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Run Integration Tests
+      - name: Run Integration Tests
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: npm run test:integration
+        working-directory: ./backend
+
+  # Stage 4: Deployment
+  deploy:
+    name: Deployment
+    needs: integration-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Configure AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Push Backend Docker Image to AWS ECR
+      - name: Push Docker Image to AWS ECR
+        run: |
+          docker build -t backend:latest ./backend
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com
+          docker tag backend:latest <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+          docker push <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+
+      # Deploy Backend to AWS ECS
+      - name: Deploy Backend to ECS with Terraform
+        working-directory: ./terraform/backend
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      # Deploy Frontend to S3
+      - name: Deploy Frontend to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync ./frontend/build s3://<frontend-s3-bucket-name> --delete
