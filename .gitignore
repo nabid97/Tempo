@@ -53,3 +53,5 @@ override.tf.json
 
 # AWS credentials (DO NOT COMMIT AWS SECRETS)
 .aws/
+*.jar
+.jar
