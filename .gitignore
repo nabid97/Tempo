@@ -37,6 +37,7 @@ build/
 
 # Terraform specific files
 .terraform/
+*.exe
 terraform.tfstate
 terraform.tfstate.backup
 *.tfplan
