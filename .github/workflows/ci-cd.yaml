@@ -24,21 +24,24 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Locate tempo-ui--template
+        run: find . -type d -name "tempo-ui--template"
+
 
       # Install Frontend Dependencies
       - name: Install Frontend Dependencies
         run: npm ci
-        working-directory: ./Tempo/tempo-ui--template
+        working-directory: ./tempo-ui--template
 
       # Run Frontend Unit Tests
       - name: Run Frontend Unit Tests with Coverage
         run: npm test -- --coverage
-        working-directory: ./Tempo/tempo-ui--template
+        working-directory: ./tempo-ui--template
 
       # Build Frontend
       - name: Build Frontend
         run: npm run build
-        working-directory: ./Tempo/tempo-ui--template
+        working-directory: ./tempo-ui--template
 
   # Stage 2: Backend Tests
   backend-tests:
@@ -121,7 +124,7 @@ jobs:
 
       # Deploy Backend to AWS ECS
       - name: Deploy Backend to ECS with Terraform
-        working-directory: ./Tempo/terraform/backend
+        working-directory: ./terraform/backend
         run: |
           terraform init
           terraform apply -auto-approve
@@ -132,14 +135,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./Tempo/terraform/frontend/build s3://tempo-frontend-app-bucket-030125 --delete
+          aws s3 sync ./terraform/frontend/build s3://tempo-frontend-app-bucket-030125 --delete
          
         # Step 6: Terraform Validation
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./Tempo/terraform
+        working-directory: ./terraform
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./Tempo/terraform
+        working-directory: ./terraform
