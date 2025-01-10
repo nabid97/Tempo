@@ -58,6 +58,10 @@ jobs:
       # Checkout Code
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Locate Tempo Folder
+        id: locate-tempo
+        run: |
+            find . -type d -name "Tempo"
 
       # Set up Node.js
       - name: Set up Node.js
