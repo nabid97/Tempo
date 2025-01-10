@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  # Stage 1: Frontend Tests
+  # Stage 1: Frontend Tests  #######################################################################################################################
   frontend-tests:
     name: Frontend Tests
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
         run: npm run build
         working-directory: ./tempo-ui--template
 
-  # Stage 2: Backend Tests
+  # Stage 2: Backend Tests #######################################################################################################################
   backend-tests:
     name: Backend Tests
     runs-on: ubuntu-latest
@@ -55,24 +55,23 @@ jobs:
           - 27017:27017
 
     steps:
-      # Checkout Code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-      - name: Locate Tempo Folder
-        id: locate-tempo
-        run: |
-            find . -type d -name "Tempo"
+        #Debug Directory Structure
+      - name: Print Current Directory
+        run: pwd
+
+      - name: List All Directories
+        run: find . -type d
+
+       #Install Backend Dependencies
+      - name: Install Backend Dependencies
+        run: npm ci
+        working-directory: ./Tempo-ECS
 
       # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
-      # Install Backend Dependencies
-      - name: Install Backend Dependencies
-        run: npm ci
-        working-directory: ./Tempo-ECS
 
       # Run Backend Unit Tests
       - name: Run Backend Unit Tests with Coverage
@@ -81,7 +80,7 @@ jobs:
         run: npm test -- --coverage
         working-directory: ./Tempo-ECS
 
-  # Stage 3: Integration Tests
+  # Stage 3: Integration Tests #######################################################################################################################
   integration-tests:
     name: Integration Tests
     needs: [frontend-tests, backend-tests]
@@ -99,7 +98,7 @@ jobs:
         run: npm run test:integration
         working-directory: ./Tempo-ECS
 
-  # Stage 4: Deployment
+  # Stage 4: Deployment #######################################################################################################################
   deploy:
     name: Deployment
     needs: integration-tests
@@ -141,7 +140,7 @@ jobs:
         run: |
           aws s3 sync ./terraform/frontend/build s3://tempo-frontend-app-bucket-030125 --delete
          
-        # Step 6: Terraform Validation
+        # Step 5: Terraform Validation #######################################################################################################################
 
       - name: Terraform Init
         run: terraform init
