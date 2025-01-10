@@ -65,7 +65,7 @@ jobs:
        #Install Backend Dependencies
       - name: Install Backend Dependencies
         run: npm ci
-        working-directory: ./Tempo-ECS
+        working-directory: ./Tempo
 
       # Set up Node.js
       - name: Set up Node.js
@@ -78,7 +78,7 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }} # MongoDB Atlas for tests
         run: npm test -- --coverage
-        working-directory: ./Tempo-ECS
+        working-directory: ./Tempo
 
   # Stage 3: Integration Tests #######################################################################################################################
   integration-tests:
@@ -96,7 +96,7 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: npm run test:integration
-        working-directory: ./Tempo-ECS
+        working-directory: ./Tempo
 
   # Stage 4: Deployment #######################################################################################################################
   deploy:
@@ -120,7 +120,7 @@ jobs:
       # Push Backend Docker Image to AWS ECR
       - name: Push Docker Image to AWS ECR
         run: |
-          docker build -t backend:latest ./Tempo-ECS
+          docker build -t backend:latest ./Tempo
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo
           docker tag backend:latest 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
           docker push 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
