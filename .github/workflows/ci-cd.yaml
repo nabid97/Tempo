@@ -133,3 +133,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws s3 sync ./terraform/frontend/build s3://tempo-frontend-app-bucket-030125 --delete
+         
+        # Step 6: Terraform Validation
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./terraform
