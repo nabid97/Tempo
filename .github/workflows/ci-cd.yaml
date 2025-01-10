@@ -27,18 +27,18 @@ jobs:
 
       # Install Frontend Dependencies
       - name: Install Frontend Dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./frontend
 
       # Run Frontend Unit Tests
       - name: Run Frontend Unit Tests with Coverage
         run: npm test -- --coverage
-        working-directory: ./frontend
+        working-directory: ./tempo-ui--template
 
       # Build Frontend
       - name: Build Frontend
         run: npm run build
-        working-directory: ./frontend
+        working-directory: ./tempo-ui--template
 
   # Stage 2: Backend Tests
   backend-tests:
@@ -64,15 +64,15 @@ jobs:
 
       # Install Backend Dependencies
       - name: Install Backend Dependencies
-        run: npm install
-        working-directory: ./backend
+        run: npm ci
+        working-directory: ./
 
       # Run Backend Unit Tests
       - name: Run Backend Unit Tests with Coverage
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }} # MongoDB Atlas for tests
         run: npm test -- --coverage
-        working-directory: ./backend
+        working-directory: ./
 
   # Stage 3: Integration Tests
   integration-tests:
@@ -90,7 +90,7 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: npm run test:integration
-        working-directory: ./backend
+        working-directory: ./
 
   # Stage 4: Deployment
   deploy:
@@ -114,10 +114,10 @@ jobs:
       # Push Backend Docker Image to AWS ECR
       - name: Push Docker Image to AWS ECR
         run: |
-          docker build -t backend:latest ./backend
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com
-          docker tag backend:latest <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/backend:latest
-          docker push <aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+          docker build -t backend:latest ./
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo
+          docker tag backend:latest 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
+          docker push 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
 
       # Deploy Backend to AWS ECS
       - name: Deploy Backend to ECS with Terraform
@@ -132,4 +132,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./frontend/build s3://<frontend-s3-bucket-name> --delete
+          aws s3 sync ./terraform/frontend/build s3://tempo-frontend-app-bucket-030125 --delete
