@@ -28,17 +28,17 @@ jobs:
       # Install Frontend Dependencies
       - name: Install Frontend Dependencies
         run: npm ci
-        working-directory: ./frontend
+        working-directory: ./Tempo/tempo-ui--template
 
       # Run Frontend Unit Tests
       - name: Run Frontend Unit Tests with Coverage
         run: npm test -- --coverage
-        working-directory: ./tempo-ui--template
+        working-directory: ./Tempo/tempo-ui--template
 
       # Build Frontend
       - name: Build Frontend
         run: npm run build
-        working-directory: ./tempo-ui--template
+        working-directory: ./Tempo/tempo-ui--template
 
   # Stage 2: Backend Tests
   backend-tests:
@@ -65,14 +65,14 @@ jobs:
       # Install Backend Dependencies
       - name: Install Backend Dependencies
         run: npm ci
-        working-directory: ./
+        working-directory: ./Tempo
 
       # Run Backend Unit Tests
       - name: Run Backend Unit Tests with Coverage
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }} # MongoDB Atlas for tests
         run: npm test -- --coverage
-        working-directory: ./
+        working-directory: ./Tempo
 
   # Stage 3: Integration Tests
   integration-tests:
@@ -90,7 +90,7 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: npm run test:integration
-        working-directory: ./
+        working-directory: ./Tempo
 
   # Stage 4: Deployment
   deploy:
@@ -114,14 +114,14 @@ jobs:
       # Push Backend Docker Image to AWS ECR
       - name: Push Docker Image to AWS ECR
         run: |
-          docker build -t backend:latest ./
+          docker build -t backend:latest ./Tempo
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo
           docker tag backend:latest 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
           docker push 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
 
       # Deploy Backend to AWS ECS
       - name: Deploy Backend to ECS with Terraform
-        working-directory: ./terraform/backend
+        working-directory: ./Tempo/terraform/backend
         run: |
           terraform init
           terraform apply -auto-approve
@@ -132,14 +132,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./terraform/frontend/build s3://tempo-frontend-app-bucket-030125 --delete
+          aws s3 sync ./Tempo/terraform/frontend/build s3://tempo-frontend-app-bucket-030125 --delete
          
         # Step 6: Terraform Validation
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform
+        working-directory: ./Tempo/terraform
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./terraform
+        working-directory: ./Tempo/terraform
