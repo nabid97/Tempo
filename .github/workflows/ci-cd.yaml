@@ -62,6 +62,12 @@ jobs:
       - name: List All Directories
         run: find . -type d
 
+      - name: Locate Tempo Folder
+        id: locate-tempo
+        run: |
+          echo "::set-output name=tempo_path::$(find . -type d -iname 'Tempo')"
+
+
        #Install Backend Dependencies
       - name: Install Backend Dependencies
         run: npm ci
