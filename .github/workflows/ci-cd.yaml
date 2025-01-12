@@ -31,17 +31,17 @@ jobs:
       # Install Frontend Dependencies
       - name: Install Frontend Dependencies
         run: npm ci
-        working-directory: ./tempo-ui--template
+        working-directory: ./-ui--template
 
       # Run Frontend Unit Tests
       - name: Run Frontend Unit Tests with Coverage
         run: npm test -- --coverage
-        working-directory: ./tempo-ui--template
+        working-directory: ./-ui--template
 
       # Build Frontend
       - name: Build Frontend
         run: npm run build
-        working-directory: ./tempo-ui--template
+        working-directory: ./-ui--template
 
   # Stage 2: Backend Tests #######################################################################################################################
   backend-tests:
@@ -71,7 +71,7 @@ jobs:
        #Install Backend Dependencies
       - name: Install Backend Dependencies
         run: npm ci
-        working-directory: ./Tempo
+        working-directory: ./
 
       # Set up Node.js
       - name: Set up Node.js
@@ -84,7 +84,7 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }} # MongoDB Atlas for tests
         run: npm test -- --coverage
-        working-directory: ./Tempo
+        working-directory: ./
 
   # Stage 3: Integration Tests #######################################################################################################################
   integration-tests:
@@ -102,7 +102,7 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: npm run test:integration
-        working-directory: ./Tempo
+        working-directory: ./
 
   # Stage 4: Deployment #######################################################################################################################
   deploy:
@@ -126,7 +126,7 @@ jobs:
       # Push Backend Docker Image to AWS ECR
       - name: Push Docker Image to AWS ECR
         run: |
-          docker build -t backend:latest ./Tempo
+          docker build -t backend:latest ./
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo
           docker tag backend:latest 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
           docker push 495599735948.dkr.ecr.us-east-1.amazonaws.com/backend/tempo:latest
