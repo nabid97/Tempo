@@ -14,7 +14,8 @@ resource "aws_ecs_task_definition" "nodejs" {
     "portMappings": [
       {
         "containerPort": 3000,
-        "hostPort": 3000
+        "hostPort": 3000,
+        "protocol": "tcp"
       }
     ]
   }
