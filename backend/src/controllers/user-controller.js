@@ -37,28 +37,35 @@ exports.register = async (req, res) => {
 };
 
 // Login a user
+// In user-controller.js, update the login method
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
         // Find user by username
         const user = await User.findOne({ username });
-        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (!user) {
+            console.log('User not found:', username);  // Add debug logging
+            return res.status(404).json({ error: 'User not found' });
+        }
 
         // Compare password
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) return res.status(401).json({ error: 'Invalid credentials' });
+        if (!isPasswordValid) {
+            console.log('Invalid password for user:', username);  // Add debug logging
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
 
-        // Generate a JWT token
+        // Generate JWT token using the same secret as in authenticate middleware
         const token = jwt.sign(
             { userId: user._id, role: user.role },
-            process.env.JWT_SECRET, // Use environment variable for JWT secret
-            { expiresIn: '1h' } // Token expires in 1 hour
+            'secretKey',  // Make sure this matches the secret in authenticate middleware
+            { expiresIn: '1h' }
         );
 
-        res.json({ token });
+        res.status(200).json({ token });
     } catch (error) {
-        console.error('Error in login:', error);
-        res.status(500).json({ error: 'An unexpected error occurred. Please try again.' });
+        console.error('Login error:', error);  // Enhanced error logging
+        res.status(500).json({ error: 'An unexpected error occurred' });
     }
 };

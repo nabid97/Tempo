@@ -1,12 +1,9 @@
-// routes/app-routes.js
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/app-controller'); // Adjust path if necessary
+const appController = require('../controllers/app-controller');
 
-// Define routes
-router.post('/register', controller.register);
-router.post('/login', controller.login);
-router.post('/jobs', controller.authenticate, controller.postJob);
-router.post('/jobs/:id/apply', controller.authenticate, controller.applyJob);
+// Define job routes
+router.post('/jobs', appController.authenticate, appController.postJob);
+router.post('/jobs/:id/apply', appController.authenticate, appController.applyJob);
 
 module.exports = router;

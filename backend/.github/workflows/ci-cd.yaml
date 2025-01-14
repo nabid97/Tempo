@@ -24,13 +24,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Locate frontend
-        run: find . -type d -name "frontend"
-
 
       # Install Frontend Dependencies
       - name: Install Frontend Dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./frontend
 
       # Run Frontend Unit Tests
@@ -55,22 +52,11 @@ jobs:
           - 27017:27017
 
     steps:
-        #Debug Directory Structure
-      - name: Print Current Directory
-        run: pwd
-
-      - name: List All Directories
-        run: find . -type d
-
-      - name: Locate backend Folder
-        id: locate-backend
-        run: |
-          echo "::set-output name=tempo_path::$(find . -type d -iname 'backend')"
-
+       
 
        #Install Backend Dependencies
       - name: Install Backend Dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./backend
 
       # Set up Node.js
