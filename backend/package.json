@@ -18,16 +18,21 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0"
+    "@babel/preset-env": "^7.26.0",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "mongoose": "^8.9.5",
+    "react-scripts": "^5.0.1"
   },
   "jest": {
-    "roots": [
-      "<rootDir>/backend"
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom",
+      "./jest.setup.js"
     ],
-    "testEnvironment": "node",
-    "moduleFileExtensions": ["js", "jsx", "json", "node"],
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "<rootDir>/src/__mocks__/styleMock.js"
     }
   }
 }
