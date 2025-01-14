@@ -55,3 +55,5 @@ override.tf.json
 .aws/
 *.jar
 .jar
+
+.git
