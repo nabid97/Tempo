@@ -82,6 +82,9 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: ./backend
 
       - name: Run Integration Tests
         env:
