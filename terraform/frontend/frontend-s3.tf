@@ -47,13 +47,13 @@ resource "aws_s3_bucket_public_access_block" "frontend" {
 resource "aws_s3_object" "frontend_index" {
   bucket        = aws_s3_bucket.frontend.id
   key           = "index.html"
-  source        = "./frontend/dist/index.html"
+  source        = "./dist/index.html"
   content_type  = "text/html"
 }
 
 resource "aws_s3_object" "frontend_js" {
   bucket       = aws_s3_bucket.frontend.id
-  key          = "static/js/bundle.js"
-  source       = "./frontend/dist/static/js/bundle.js"
+  key          = "bundle.js"
+  source       = "./dist/bundle.js"
   content_type = "application/javascript"
 }
