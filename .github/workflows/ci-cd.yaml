@@ -52,6 +52,11 @@ jobs:
           - 27017:27017
 
     steps:
+      - name: Debug Directory Structure
+        run: |
+           pwd
+           ls -la
+           find . -type d
        #Install Backend Dependencies
       - name: Install Backend Dependencies
         run: npm ci
