@@ -159,7 +159,7 @@ jobs:
       - name: Cleanup S3 Bucket
         if: always()
         run: |
-          aws s3 rm s3://tempo-frontend-app-bucket-030125 --recursive
+          aws s3 rm s3://tempo-frontend-app-bucket-030125 --recursive --ignore-missing-bucket
         continue-on-error: true
 
       - name: Remove ECR Images
