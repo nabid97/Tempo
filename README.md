@@ -17,7 +17,7 @@ Tempo/
 ├── frontend/              # Frontend application (React)
 │   ├── public/
 │   ├── src/
-│   ├── build/             # Production build artifacts
+│   ├── dist/             # Production build artifacts
 │   ├── package.json
 │   └── tests/             # Frontend unit tests
 ├── terraform/             # Terraform scripts for AWS infrastructure
@@ -35,7 +35,7 @@ Tempo/
 - **Frontend**:
   - Developed using React.
   - User-friendly interface for job seekers and employers.
-  - Hosted on AWS S3 with CloudFront as a content delivery network (CDN).
+  - Hosted on AWS S3.
   - Dynamically configured API URL via environment variables.
 
 - **Backend**:
@@ -98,7 +98,7 @@ cd Tempo
    ```
 4. Start the server:
    ```bash
-   npm run dev
+   node server.js
    ```
 
 #### **3. Frontend Setup**
@@ -116,7 +116,7 @@ cd Tempo
    ```
 4. Start the development server:
    ```bash
-   npm start
+   npm run build
    ```
 
 ---
@@ -150,7 +150,7 @@ The CI/CD pipeline is defined in `.github/workflows`. It includes:
 - **Integration Tests**: Ensures end-to-end functionality.
 - **Deployment**:
   - Backend to AWS ECS (Fargate).
-  - Frontend to AWS S3 and CloudFront.
+  - Frontend to AWS S3.
 
 Trigger the pipeline by pushing to the `main` branch.
 
