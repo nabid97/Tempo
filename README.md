@@ -66,7 +66,7 @@ Tempo/
 ## **Getting Started**
 
 ### **Prerequisites**
-- Node.js >= 18.x
+- Node.js >= 22.x
 - NPM or Yarn
 - Terraform >= 1.5.x
 - AWS CLI configured with access keys
